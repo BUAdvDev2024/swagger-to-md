@@ -6,30 +6,20 @@ Number of Paths: 7
 * [Disciplinary](#disciplinary)
 	* get-employees-disciplinaries
 	* create-disciplinary
-	* register
-	* terminated-employee
-	* all
-	* create-role
-	* get-roles
 * [Profile](#profile)
-	* get-employees-disciplinaries
-	* create-disciplinary
 	* register
 	* terminated-employee
 	* all
-	* create-role
-	* get-roles
 * [Role](#role)
-	* get-employees-disciplinaries
-	* create-disciplinary
-	* register
-	* terminated-employee
-	* all
 	* create-role
 	* get-roles
-## <a name="disciplinary"></a> Disciplinary
-Some detailed documentation for this group will go here.
-## <a name="profile"></a> Profile
-Some detailed documentation for this group will go here.
-## <a name="role"></a> Role
-Some detailed documentation for this group will go here.
+### <a name="disciplinary"></a> Disciplinary
+#### <a name="/disciplinary/get-employees-disciplinaries"></a>/disciplinary/get-employees-disciplinaries `GET` 
+#### <a name="/disciplinary/create-disciplinary"></a>/disciplinary/create-disciplinary `POST` 
+### <a name="profile"></a> Profile
+#### <a name="/profile/register"></a>/profile/register `POST` 
+#### <a name="/profile/terminated-employee"></a>/profile/terminated-employee `POST` 
+#### <a name="/profile/all"></a>/profile/all `GET` 
+### <a name="role"></a> Role
+#### <a name="/role/create-role"></a>/role/create-role `POST` 
+#### <a name="/role/get-roles"></a>/role/get-roles `GET` 
