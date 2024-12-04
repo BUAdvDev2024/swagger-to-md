@@ -11,7 +11,8 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "args": [
-                "test-swagger.json",
+                "Employee Management API",
+                "test-swagger-2.json",
                 "output.md"
             ]
         }

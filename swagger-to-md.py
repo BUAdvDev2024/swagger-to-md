@@ -41,23 +41,43 @@ def get_detailed_group_docs(group_title: str, all_endpoints: list):
         for method in endpoint_data["data"].keys():
             title_line += f" `{method.upper()}` "
         lines.append(title_line)
+        
+
         # for each method right doc
         for method, method_data in endpoint_data["data"].items():
+            # doc summary if it exists
+            if method_data.get("summary"):
+                summary = method_data.get("summary")
+                lines.append("### Summary")
+                lines.append(summary)
+
             if method_data.get("requestBody"):
                 requestBody = method_data.get("requestBody")
                 content = requestBody["content"]
-                lines.append("### Content")
+                # build table of expected content types and schemas
+                lines.append("### Request Body Content")
                 lines.append("| Content Type | Schema |")
                 lines.append("|--------------|--------|")
-                for key, value in content.items():
-                    lines.append(f"| {key} | {value["schema"]["$ref"].split("/")[-1]} |")
+                schemas = []
+                for schema_data in content.values():
+                    schema_ref = schema_data["schema"]["$ref"].split("/")[-1]
+                    schema_tag = f"[{schema_ref}](#{schema_ref})"
+                    if not schema_tag in schemas:
+                        schemas.append(schema_tag)
+
+
+                lines.append(f"| `{"` `".join(content.keys())}` | {" ".join(schemas)}")
+
+                # for key, value in content.items():
+                #     schema_name = value["schema"]["$ref"].split("/")[-1]
+                #     lines.append(f"| {key} | [{schema_name}](#{schema_name}) |")
                     
 
             if method_data.get("parameters"):
                 params = method_data.get("parameters")
                 lines.append("### Parameters")
                 # create table of parameters
-                lines.append("| Name | Schema |")
+                lines.append("| Name | Data Type |")
                 lines.append("|------|--------|")
                 for param in params:
                     lines.append(f"| {param["name"]} | `{"` `".join(param["schema"].values())}` |")
@@ -77,35 +97,37 @@ def get_detailed_group_docs(group_title: str, all_endpoints: list):
 
 def get_detailed_schema_docs(schema_name, schema_data):
     lines = []
-    lines.append(f"## {schema_name} `{schema_data["type"]}`")
+    lines.append(f"## <a name=\"{schema_name}\"></a>{schema_name} `{schema_data["type"]}`")
     lines.append("### Properties")
-    lines.append("| Property Name | Type | Format | Nullable |")
+    lines.append("| Property Name | Type | Format | Nullable? |")
     lines.append("|---------------|------|--------|----------|")
     for property_name, property_data in schema_data["properties"].items():
-        lines.append(f"| {property_name} | {property_data["type"]} | {property_data.get("format") or "N/a"} | {property_data.get("nullable") or "false"} |")
+        lines.append(f"| {property_name} | {property_data["type"]} | {property_data.get("format") or "--"} | {property_data.get("nullable") or "false"} |")
     return lines
 
 def main():
-    if len(sys.argv) < 3:
+    if len(sys.argv) < 4:
         print("Incorrect number of parameters provided, try again")
         return
     
     print("Converting swagger to md file")
 
-    source_json_file = sys.argv[1]
-    output_file_path = sys.argv[2]
+    api_name = sys.argv[1]
+    source_json_file = sys.argv[2]
+    output_file_path = sys.argv[3]
 
+    # read source swagger.json file
     data = {}
     with open(source_json_file) as file:
         data = json.loads(file.read())
 
     lines = []
-    lines.append(f"# {data["info"]["title"]} API Document - Version: {data["info"]["version"]}")
-    lines.append("###### OpenAPI Documentation Markdown Document")
-    lines.append(f"Open API Version: {data["openapi"]}")
-    lines.append(f"Number of Paths: {len(data["paths"])}")
+    # print header
+    lines.append(f"# {api_name}")
+    lines.append(f"###### API Version: {data["info"]["version"]} - Open API Version: {data["openapi"]} - Paths: ({len(data["paths"])}) - Schema ({len(data["components"]["schemas"].keys())})")
+    
+    # print glossary for endpoints grouped by route
     lines.append("## API Endpoints")
-    # print end points groups, print endpoints nested
     groups = get_endpoint_groups(data["paths"])
     for group in groups:
         lines.append(f"* [{group.title()}](#{group})")
@@ -113,6 +135,11 @@ def main():
         for endpoint_data in endpoints_in_group:
             relative_endpoint = endpoint_data["endpoint"].split("/")[-1]
             lines.append(f"\t* [{relative_endpoint}](#{endpoint_data["endpoint"]})")
+    # print glossary for schemas
+    lines.append("## Schemas")
+    for schema_name in data["components"]["schemas"].keys():
+        lines.append(f"* [{schema_name.title()}](#{schema_name})")
+        
 
     
     # print detailed docs for each group of endpoints
@@ -132,6 +159,10 @@ def main():
                     lines.append(line)
         else:
             lines.append("No schemas")
+
+    # add watermark
+    lines.append("")
+    lines.append("###### API doc created by swagger-to-md.py")        
 
     # create file and write lines to it
     with open(output_file_path, "w") as file:

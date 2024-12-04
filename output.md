@@ -1,22 +1,26 @@
-# EmployeeManagementService.Presentation API Document - Version: 1.0
-###### OpenAPI Documentation Markdown Document
-Open API Version: 3.0.1
-Number of Paths: 7
+# Employee Management API
+###### API Version: 1.0 - Open API Version: 3.0.1 - Paths: (7) - Schema (3)
 ## API Endpoints
 * [Disciplinary](#disciplinary)
 	* [get-employees-disciplinaries](#/disciplinary/get-employees-disciplinaries)
 	* [create-disciplinary](#/disciplinary/create-disciplinary)
 * [Profile](#profile)
-	* [register](#/profile/register)
+	* [register-employee](#/profile/register-employee)
 	* [terminated-employee](#/profile/terminated-employee)
 	* [all](#/profile/all)
 * [Role](#role)
 	* [create-role](#/role/create-role)
-	* [get-roles](#/role/get-roles)
+	* [all](#/role/all)
+## Schemas
+* [Createdisciplinarypayload](#CreateDisciplinaryPayload)
+* [Createrolepayload](#CreateRolePayload)
+* [Employeeregistrationpayload](#EmployeeRegistrationPayload)
 ## <a name="disciplinary"></a> Disciplinary
 ## <a name="/disciplinary/get-employees-disciplinaries"></a>/disciplinary/get-employees-disciplinaries `GET` 
+### Summary
+Does some really cool stuff!
 ### Parameters
-| Name | Schema |
+| Name | Data Type |
 |------|--------|
 | employeeId | `integer` `int32` |
 ### Responses
@@ -25,25 +29,21 @@ Number of Paths: 7
 | 200 | Success
 
 ## <a name="/disciplinary/create-disciplinary"></a>/disciplinary/create-disciplinary `POST` 
-### Content
+### Request Body Content
 | Content Type | Schema |
 |--------------|--------|
-| application/json | CreateDisciplinaryPayload |
-| text/json | CreateDisciplinaryPayload |
-| application/*+json | CreateDisciplinaryPayload |
+| `application/json` `text/json` `application/*+json` | [CreateDisciplinaryPayload](#CreateDisciplinaryPayload)
 ### Responses
 | Response | Description |
 |----------|-------------|
 | 200 | Success
 
 ## <a name="profile"></a> Profile
-## <a name="/profile/register"></a>/profile/register `POST` 
-### Content
+## <a name="/profile/register-employee"></a>/profile/register-employee `POST` 
+### Request Body Content
 | Content Type | Schema |
 |--------------|--------|
-| application/json | EmployeeRegistrationPayload |
-| text/json | EmployeeRegistrationPayload |
-| application/*+json | EmployeeRegistrationPayload |
+| `application/json` `text/json` `application/*+json` | [EmployeeRegistrationPayload](#EmployeeRegistrationPayload)
 ### Responses
 | Response | Description |
 |----------|-------------|
@@ -51,7 +51,7 @@ Number of Paths: 7
 
 ## <a name="/profile/terminated-employee"></a>/profile/terminated-employee `POST` 
 ### Parameters
-| Name | Schema |
+| Name | Data Type |
 |------|--------|
 | EmployeeId | `integer` `int32` |
 ### Responses
@@ -61,7 +61,9 @@ Number of Paths: 7
 
 ## <a name="/profile/all"></a>/profile/all `GET` 
 ### Parameters
-No parameters
+| Name | Data Type |
+|------|--------|
+| restaurantId | `string` |
 ### Responses
 | Response | Description |
 |----------|-------------|
@@ -69,18 +71,16 @@ No parameters
 
 ## <a name="role"></a> Role
 ## <a name="/role/create-role"></a>/role/create-role `POST` 
-### Content
+### Request Body Content
 | Content Type | Schema |
 |--------------|--------|
-| application/json | CreateRolePayload |
-| text/json | CreateRolePayload |
-| application/*+json | CreateRolePayload |
+| `application/json` `text/json` `application/*+json` | [CreateRolePayload](#CreateRolePayload)
 ### Responses
 | Response | Description |
 |----------|-------------|
 | 200 | Success
 
-## <a name="/role/get-roles"></a>/role/get-roles `GET` 
+## <a name="/role/all"></a>/role/all `GET` 
 ### Parameters
 No parameters
 ### Responses
@@ -89,33 +89,35 @@ No parameters
 | 200 | Success
 
 ## Schemas
-## CreateDisciplinaryPayload `object`
+## <a name="CreateDisciplinaryPayload"></a>CreateDisciplinaryPayload `object`
 ### Properties
-| Property Name | Type | Format | Nullable |
+| Property Name | Type | Format | Nullable? |
 |---------------|------|--------|----------|
 | employeeId | integer | int32 | false |
 | dateOfOffense | string | date-time | True |
-| offenseType | string | N/a | True |
-| disciplinaryActionTaken | boolean | N/a | false |
-## CreateRolePayload `object`
+| offenseType | string | -- | True |
+| disciplinaryActionTaken | boolean | -- | false |
+## <a name="CreateRolePayload"></a>CreateRolePayload `object`
 ### Properties
-| Property Name | Type | Format | Nullable |
+| Property Name | Type | Format | Nullable? |
 |---------------|------|--------|----------|
-| title | string | N/a | True |
-| description | string | N/a | True |
+| title | string | -- | True |
+| description | string | -- | True |
 | hourlyRate | number | double | false |
-## EmployeeRegistrationPayload `object`
+## <a name="EmployeeRegistrationPayload"></a>EmployeeRegistrationPayload `object`
 ### Properties
-| Property Name | Type | Format | Nullable |
+| Property Name | Type | Format | Nullable? |
 |---------------|------|--------|----------|
-| firstName | string | N/a | false |
-| lastName | string | N/a | false |
+| firstName | string | -- | false |
+| lastName | string | -- | false |
 | phoneNumber | string | tel | false |
 | emailAddress | string | email | false |
-| addressLine1 | string | N/a | True |
-| addressLine2 | string | N/a | True |
-| addressLine3 | string | N/a | True |
-| addressLine4 | string | N/a | True |
-| postCode | string | N/a | True |
+| addressLine1 | string | -- | True |
+| addressLine2 | string | -- | True |
+| addressLine3 | string | -- | True |
+| addressLine4 | string | -- | True |
+| postCode | string | -- | True |
 | roleId | integer | int32 | false |
-| restaurantId | string | N/a | True |
+| restaurantId | string | -- | True |
+
+###### API doc created by swagger-to-md.py
