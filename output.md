@@ -15,75 +15,75 @@
 * [Createdisciplinarypayload](#CreateDisciplinaryPayload)
 * [Createrolepayload](#CreateRolePayload)
 * [Employeeregistrationpayload](#EmployeeRegistrationPayload)
-## <a name="disciplinary"></a> Disciplinary
+## <a name="disciplinary"></a> Disciplinary Endpoints
 ## <a name="/disciplinary/get-employees-disciplinaries"></a>/disciplinary/get-employees-disciplinaries `GET` 
-### Summary
+#### Summary
 Does some really cool stuff!
-### Parameters
+#### Parameters
 | Name | Data Type |
 |------|--------|
 | employeeId | `integer` `int32` |
-### Responses
+#### Responses
 | Response | Description |
 |----------|-------------|
 | 200 | Success
 
 ## <a name="/disciplinary/create-disciplinary"></a>/disciplinary/create-disciplinary `POST` 
-### Request Body Content
+#### Request Body Content
 | Content Type | Schema |
 |--------------|--------|
 | `application/json` `text/json` `application/*+json` | [CreateDisciplinaryPayload](#CreateDisciplinaryPayload)
-### Responses
+#### Responses
 | Response | Description |
 |----------|-------------|
 | 200 | Success
 
-## <a name="profile"></a> Profile
+## <a name="profile"></a> Profile Endpoints
 ## <a name="/profile/register-employee"></a>/profile/register-employee `POST` 
-### Request Body Content
+#### Request Body Content
 | Content Type | Schema |
 |--------------|--------|
 | `application/json` `text/json` `application/*+json` | [EmployeeRegistrationPayload](#EmployeeRegistrationPayload)
-### Responses
+#### Responses
 | Response | Description |
 |----------|-------------|
 | 200 | Success
 
 ## <a name="/profile/terminated-employee"></a>/profile/terminated-employee `POST` 
-### Parameters
+#### Parameters
 | Name | Data Type |
 |------|--------|
 | EmployeeId | `integer` `int32` |
-### Responses
+#### Responses
 | Response | Description |
 |----------|-------------|
 | 200 | Success
 
 ## <a name="/profile/all"></a>/profile/all `GET` 
-### Parameters
+#### Parameters
 | Name | Data Type |
 |------|--------|
 | restaurantId | `string` |
-### Responses
+#### Responses
 | Response | Description |
 |----------|-------------|
 | 200 | Success
 
-## <a name="role"></a> Role
+## <a name="role"></a> Role Endpoints
 ## <a name="/role/create-role"></a>/role/create-role `POST` 
-### Request Body Content
+#### Request Body Content
 | Content Type | Schema |
 |--------------|--------|
 | `application/json` `text/json` `application/*+json` | [CreateRolePayload](#CreateRolePayload)
-### Responses
+#### Responses
 | Response | Description |
 |----------|-------------|
 | 200 | Success
 
 ## <a name="/role/all"></a>/role/all `GET` 
-### Parameters
+#### Parameters
 No parameters
-### Responses
+#### Responses
 | Response | Description |
 |----------|-------------|
 | 200 | Success
@@ -93,31 +93,31 @@ No parameters
 ### Properties
 | Property Name | Type | Format | Nullable? |
 |---------------|------|--------|----------|
-| employeeId | integer | int32 | false |
-| dateOfOffense | string | date-time | True |
-| offenseType | string | -- | True |
-| disciplinaryActionTaken | boolean | -- | false |
+| employeeId | integer | int32 | -- |
+| dateOfOffense | string | date-time | nullable |
+| offenseType | string | -- | nullable |
+| disciplinaryActionTaken | boolean | -- | -- |
 ## <a name="CreateRolePayload"></a>CreateRolePayload `object`
 ### Properties
 | Property Name | Type | Format | Nullable? |
 |---------------|------|--------|----------|
-| title | string | -- | True |
-| description | string | -- | True |
-| hourlyRate | number | double | false |
+| title | string | -- | nullable |
+| description | string | -- | nullable |
+| hourlyRate | number | double | -- |
 ## <a name="EmployeeRegistrationPayload"></a>EmployeeRegistrationPayload `object`
 ### Properties
 | Property Name | Type | Format | Nullable? |
 |---------------|------|--------|----------|
-| firstName | string | -- | false |
-| lastName | string | -- | false |
-| phoneNumber | string | tel | false |
-| emailAddress | string | email | false |
-| addressLine1 | string | -- | True |
-| addressLine2 | string | -- | True |
-| addressLine3 | string | -- | True |
-| addressLine4 | string | -- | True |
-| postCode | string | -- | True |
-| roleId | integer | int32 | false |
-| restaurantId | string | -- | True |
+| firstName | string | -- | -- |
+| lastName | string | -- | -- |
+| phoneNumber | string | tel | -- |
+| emailAddress | string | email | -- |
+| addressLine1 | string | -- | nullable |
+| addressLine2 | string | -- | nullable |
+| addressLine3 | string | -- | nullable |
+| addressLine4 | string | -- | nullable |
+| postCode | string | -- | nullable |
+| roleId | integer | int32 | -- |
+| restaurantId | string | -- | nullable |
 
 ###### API doc created by swagger-to-md.py

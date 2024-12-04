@@ -32,7 +32,7 @@ def get_all_endpoint_data_in_group(all_endpoints: list, group: str):
 
 def get_detailed_group_docs(group_title: str, all_endpoints: list):
     lines = []
-    lines.append(f"## <a name=\"{group_title}\"></a> {group_title.title()}")
+    lines.append(f"## <a name=\"{group_title}\"></a> {group_title.title()} Endpoints")
     # for each endpoint in group print detailed docs
     endpoints_data = get_all_endpoint_data_in_group(all_endpoints, group_title)
 
@@ -48,14 +48,14 @@ def get_detailed_group_docs(group_title: str, all_endpoints: list):
             # doc summary if it exists
             if method_data.get("summary"):
                 summary = method_data.get("summary")
-                lines.append("### Summary")
+                lines.append("#### Summary")
                 lines.append(summary)
 
             if method_data.get("requestBody"):
                 requestBody = method_data.get("requestBody")
                 content = requestBody["content"]
                 # build table of expected content types and schemas
-                lines.append("### Request Body Content")
+                lines.append("#### Request Body Content")
                 lines.append("| Content Type | Schema |")
                 lines.append("|--------------|--------|")
                 schemas = []
@@ -64,29 +64,22 @@ def get_detailed_group_docs(group_title: str, all_endpoints: list):
                     schema_tag = f"[{schema_ref}](#{schema_ref})"
                     if not schema_tag in schemas:
                         schemas.append(schema_tag)
-
-
-                lines.append(f"| `{"` `".join(content.keys())}` | {" ".join(schemas)}")
-
-                # for key, value in content.items():
-                #     schema_name = value["schema"]["$ref"].split("/")[-1]
-                #     lines.append(f"| {key} | [{schema_name}](#{schema_name}) |")
-                    
+                lines.append(f"| `{"` `".join(content.keys())}` | {" ".join(schemas)}")                    
 
             if method_data.get("parameters"):
                 params = method_data.get("parameters")
-                lines.append("### Parameters")
+                lines.append("#### Parameters")
                 # create table of parameters
                 lines.append("| Name | Data Type |")
                 lines.append("|------|--------|")
                 for param in params:
                     lines.append(f"| {param["name"]} | `{"` `".join(param["schema"].values())}` |")
             elif method == "get":
-                lines.append("### Parameters")
+                lines.append("#### Parameters")
                 lines.append("No parameters")
             if method_data.get("responses"):
                 responses = method_data.get("responses")
-                lines.append("### Responses")
+                lines.append("#### Responses")
                 lines.append("| Response | Description |")
                 lines.append("|----------|-------------|")
                 for response, response_data in responses.items():
@@ -102,7 +95,7 @@ def get_detailed_schema_docs(schema_name, schema_data):
     lines.append("| Property Name | Type | Format | Nullable? |")
     lines.append("|---------------|------|--------|----------|")
     for property_name, property_data in schema_data["properties"].items():
-        lines.append(f"| {property_name} | {property_data["type"]} | {property_data.get("format") or "--"} | {property_data.get("nullable") or "false"} |")
+        lines.append(f"| {property_name} | {property_data["type"]} | {property_data.get("format") or "--"} | { "nullable" if property_data.get("nullable") else "--"} |")
     return lines
 
 def main():
