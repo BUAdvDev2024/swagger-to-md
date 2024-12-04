@@ -32,20 +32,58 @@ def get_all_endpoint_data_in_group(all_endpoints: list, group: str):
 
 def get_detailed_group_docs(group_title: str, all_endpoints: list):
     lines = []
-    lines.append(f"### <a name=\"{group_title}\"></a> {group_title.title()}")
+    lines.append(f"## <a name=\"{group_title}\"></a> {group_title.title()}")
     # for each endpoint in group print detailed docs
     endpoints_data = get_all_endpoint_data_in_group(all_endpoints, group_title)
 
     for endpoint_data in endpoints_data:
-        title_line = f"#### <a name=\"{endpoint_data["endpoint"]}\"></a>{endpoint_data["endpoint"]}"
+        title_line = f"## <a name=\"{endpoint_data["endpoint"]}\"></a>{endpoint_data["endpoint"]}"
         for method in endpoint_data["data"].keys():
             title_line += f" `{method.upper()}` "
         lines.append(title_line)
         # for each method right doc
-        
+        for method, method_data in endpoint_data["data"].items():
+            if method_data.get("requestBody"):
+                requestBody = method_data.get("requestBody")
+                content = requestBody["content"]
+                lines.append("### Content")
+                lines.append("| Content Type | Schema |")
+                lines.append("|--------------|--------|")
+                for key, value in content.items():
+                    lines.append(f"| {key} | {value["schema"]["$ref"].split("/")[-1]} |")
+                    
 
+            if method_data.get("parameters"):
+                params = method_data.get("parameters")
+                lines.append("### Parameters")
+                # create table of parameters
+                lines.append("| Name | Schema |")
+                lines.append("|------|--------|")
+                for param in params:
+                    lines.append(f"| {param["name"]} | `{"` `".join(param["schema"].values())}` |")
+            elif method == "get":
+                lines.append("### Parameters")
+                lines.append("No parameters")
+            if method_data.get("responses"):
+                responses = method_data.get("responses")
+                lines.append("### Responses")
+                lines.append("| Response | Description |")
+                lines.append("|----------|-------------|")
+                for response, response_data in responses.items():
+                    lines.append(f"| {response} | {response_data["description"]}")
+            lines.append("")
     return lines
         
+
+def get_detailed_schema_docs(schema_name, schema_data):
+    lines = []
+    lines.append(f"## {schema_name} `{schema_data["type"]}`")
+    lines.append("### Properties")
+    lines.append("| Property Name | Type | Format | Nullable |")
+    lines.append("|---------------|------|--------|----------|")
+    for property_name, property_data in schema_data["properties"].items():
+        lines.append(f"| {property_name} | {property_data["type"]} | {property_data.get("format") or "N/a"} | {property_data.get("nullable") or "false"} |")
+    return lines
 
 def main():
     if len(sys.argv) < 3:
@@ -66,14 +104,15 @@ def main():
     lines.append("###### OpenAPI Documentation Markdown Document")
     lines.append(f"Open API Version: {data["openapi"]}")
     lines.append(f"Number of Paths: {len(data["paths"])}")
-    lines.append("## API Endpoints:")
+    lines.append("## API Endpoints")
     # print end points groups, print endpoints nested
     groups = get_endpoint_groups(data["paths"])
     for group in groups:
         lines.append(f"* [{group.title()}](#{group})")
-        endpoints_in_group = get_endpoint_titles_in_group(data["paths"], group)
-        for endpoint in endpoints_in_group:
-            lines.append(f"\t* {endpoint}")
+        endpoints_in_group = get_all_endpoint_data_in_group(data["paths"], group)
+        for endpoint_data in endpoints_in_group:
+            relative_endpoint = endpoint_data["endpoint"].split("/")[-1]
+            lines.append(f"\t* [{relative_endpoint}](#{endpoint_data["endpoint"]})")
 
     
     # print detailed docs for each group of endpoints
@@ -81,6 +120,20 @@ def main():
         for line in get_detailed_group_docs(group, data["paths"]):
             lines.append(line)
 
+    # print detailed docs for each schema
+    if data.get("components"):
+        components = data.get("components")
+        lines.append("## Schemas")
+        if components.get("schemas"):
+            schemas = components.get("schemas")
+            # get lines for schema documentation
+            for schema_name, schema_data in schemas.items():
+                for line in get_detailed_schema_docs(schema_name, schema_data):
+                    lines.append(line)
+        else:
+            lines.append("No schemas")
+
+    # create file and write lines to it
     with open(output_file_path, "w") as file:
         for line in lines:
             file.write(f"{line}\n")
