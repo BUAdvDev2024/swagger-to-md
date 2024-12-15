@@ -148,8 +148,9 @@ def main():
             schemas = components.get("schemas")
             # get lines for schema documentation
             for schema_name, schema_data in schemas.items():
-                for line in get_detailed_schema_docs(schema_name, schema_data):
-                    lines.append(line)
+                if schema_data.get("properties"):
+                    for line in get_detailed_schema_docs(schema_name, schema_data):
+                        lines.append(line)
         else:
             lines.append("No schemas")
 
