@@ -95,7 +95,7 @@ def get_detailed_schema_docs(schema_name, schema_data):
     lines.append("| Property Name | Type | Format | Nullable? |")
     lines.append("|---------------|------|--------|----------|")
     for property_name, property_data in schema_data["properties"].items():
-        lines.append(f"| {property_name} | {property_data["type"]} | {property_data.get("format") or "--"} | { "nullable" if property_data.get("nullable") else "--"} |")
+        lines.append(f"| {property_name} | {property_data.get("type") or "--"} | {property_data.get("format") or "--"} | { "nullable" if property_data.get("nullable") else "--"} |")
     return lines
 
 def main():
